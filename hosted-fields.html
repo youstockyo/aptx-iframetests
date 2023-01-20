@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://sandbox.aptx.cm/script/aptx-hosted-fields.js"></script>
+<!--     <script src="script/aptx-hosted-fields.js"></script> -->
+    <style>
+        body,
+        body * {
+            box-sizing: border-box;
+        }
+
+        body * {
+            font-family: "Open Sans", Arial, Helvetica, sans-serif;
+            font-size: 1em;
+        }
+
+        body {
+            padding: 20px;
+            background-color: #c5d8d1;
+        }
+
+        h1 {
+            width: 500px;
+            font-size: 2em;
+            margin: 3em auto 0 auto;
+        }
+
+        .form-wrapper {
+            width: 600px;
+            margin: 1em auto;
+            background-color: #eef1ef;
+            border-radius: 3px;
+            padding: 2.5em;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-field {
+            margin-bottom: 20px;
+        }
+
+        .field-container {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            max-width: 100%;
+            height: 2em;
+            margin-top: 7px;
+            padding: 5px 7px 3px 7px;
+            border: 2px solid darkgrey;
+            border-radius: 5px;
+            background-color: #ffffff;
+        }
+
+        .field-container > iframe {
+            border: none;
+            margin: 0px;
+            padding: 0px;
+            width: 1px;
+            min-width: 100%;
+            height: 100%;
+            overflow: hidden;
+            display: block;
+        }
+
+        button {
+            padding: 15px 50px;
+            background-color: #4d685a;
+            color: #ffffff;
+            cursor: pointer;
+            font-weight: 700;
+            text-transform: uppercase;
+            line-height: inherit;
+            position: relative;
+            text-decoration: none;
+            text-align: center;
+            border-style: solid;
+            border-width: 1px;
+            border-radius: 3px;
+            display: inline-block;
+            margin: 0 auto;
+        }
+
+        .button-container {
+            text-align: center;
+        }
+
+        .mw-button > iframe {
+            border: none;
+            margin: 0px;
+            padding: 0px;
+            min-width: 100%;
+            height: 100%;
+            overflow: hidden;
+            display: block;
+        }
+
+        .mw-button {
+            height: 55px;
+            min-width: 350px;
+            margin-bottom: 18px;
+        }
+
+        .paypal-later-msg-container,
+        .paypal-later-msg-container > iframe {
+            height: 50px;
+        }
+
+        .paypal-submit-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .item-description {
+            display: flex;
+            margin-top: 40px;
+            margin-bottom: 40px;
+            width:100%;
+        }
+
+
+
+        .nav {
+            margin-bottom: 25px;
+            display: flex;
+        }
+        .nav li {
+            flex: 1;
+        }
+        .nav li button {
+            color: #4d685a;
+        }
+        .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+            background: transparent;
+            border: 3px solid #4d685a;
+            color: #4d685a;
+        }
+        .nav-link:focus, .nav-link:hover {
+            color: #4d685a;
+        }
+        .is--block {
+            display: block;
+        }
+    </style>
+    <title>Hosted Fields Test</title>
+</head>
+
+<body>
+    <h1>
+        Hosted Fields Test
+    </h1>
+    <div class="form-wrapper">
+        <ul class="nav nav-pills" id="pills-tab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="pills-bank-tab" data-bs-toggle="pill" data-bs-target="#pills-bank" type="button" role="tab" aria-controls="pills-bank" aria-selected="true">Add Bank</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-card-tab" data-bs-toggle="pill" data-bs-target="#pills-card" type="button" role="tab" aria-controls="pills-card" aria-selected="false">Add Card</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-paypal-tab" data-bs-toggle="pill" data-bs-target="#pills-paypal" type="button" role="tab" aria-controls="pills-card" aria-selected="false">PayPal</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-venmo-tab" data-bs-toggle="pill" data-bs-target="#pills-venmo" type="button" role="tab" aria-controls="pills-card" aria-selected="false">Venmo</button>
+            </li>
+        </ul>
+        <div class="tab-content" id="pills-tabContent">
+            <div class="tab-pane fade show active" id="pills-bank">
+                <div class="form-field">
+                    <label for="account-name-container">Name</label>
+                    <div id="account-name-container" class="field-container"></div>
+                </div>
+                <div class="form-field">
+                    <label for="routing-container">Bank Routing Number</label>
+                    <div id="routing-container" class="field-container"></div>
+                </div>
+                <div class="form-field">
+                    <label for="account-container">Bank Account Number</label>
+                    <div id="account-container" class="field-container"></div>
+                </div>
+                <div class="form-field">
+                    <label for="confirm-account-container">Confirm Bank Account Number</label>
+                    <div id="confirm-account-container" class="field-container"></div>
+                </div>
+                <div class="form-field">
+                    <label for="account-type-container">Account Type</label>
+                    <div id="account-type-container" class="field-container"></div>
+                </div>
+                <div class="button-container">
+                    <button onclick="submitForm();">
+                        Submit
+                    </button>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="pills-card">
+                <div class="form-field">
+                    Name
+                    <div id="card-name-container" class="field-container"></div>
+                </div>
+                <div class="form-field">
+                    Card Number
+                    <div id="card-container" class="field-container"></div>
+                </div>
+                <div class="form-field">
+                    Expiration Date
+                    <div id="expiration-container" class="field-container"></div>
+                </div>
+                <div class="form-field">
+                    Zip Code
+                    <div id="zip-container" class="field-container"></div>
+                </div>
+                <div class="button-container">
+                    <button onclick="submitForm();">
+                        Submit
+                    </button>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="pills-paypal">
+                <div class="item-description">
+                    <div style="flex: 1 1 20em; margin-right: 40px;">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat fugit unde, necessitatibus ex temporibus culpa consequatur iusto. Quia doloremque quo possimus, inventore at porro quis libero hic, et quidem nostrum.
+                    </div>
+                    <label class="form-field">
+                        <span class="is--block">Amount</span>
+                        <input type="number"
+                            id="payment-amount">
+                    </label>
+                </div>
+                
+                <div class="paypal-submit-container">
+                    <div id="paypal-container"
+                        class="mw-button">
+                    </div>
+                    <div id="paypal-later-container"
+                        class="mw-button">
+                    </div>
+                    <div id="paypal-later-msg-container"></div>
+                </div>
+                
+                
+            </div>
+            <div class="tab-pane fade" id="pills-venmo">
+                <div id="venmo-container"
+                    class="venmo-button-container"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function submitForm()
+        {
+            var methodType;
+            var activeTab = document.querySelector('.nav-link.active');
+
+            if(activeTab.id == 'pills-bank-tab')
+            {
+                methodType = 'BANK';
+            }
+            else
+            {
+                methodType = 'CARD';
+            }
+
+            aptxFields.submit(methodType);
+        };
+        
+        function callbackFunc(data)
+        {
+            console.log("this is the callbackFunc", data)
+        };
+
+        function payPalApproveCallback(data)
+        {
+            console.log("this is the payPalApproveCallback", data)
+            aptxFields.submitPayment(data)
+        };
+
+        function payPalErrorCallback()
+        {
+            console.log("this is the payPalErrorCallback")
+        };
+
+        function getPaymentAmount()
+        {
+            console.log('getPaymentAmount()');
+            return 19.99;
+        };
+
+        var config = 
+        {
+            sessionId: 'ABC123DEF456',
+            accountPersonId: 46099107,
+            accountTargetId: 12290318,
+            production: false,
+            testEnv: true,
+            token: "1L8W0FRTKM31ELSU",
+            amount: getPaymentAmount,
+            fields:
+            [
+                {
+                    type: "ACCOUNT_NAME",
+                    id: "account-name-container",
+                    placeholder: "Account Name"
+                },
+                {
+                    type: "ACCOUNT_NUMBER",
+                    id: "account-container"
+                },
+                {
+                    type: "ACCOUNT_NUMBER_CONFIRM",
+                    id: "confirm-account-container"
+                },
+                {
+                    type: "ROUTING_NUMBER",
+                    id: "routing-container"
+                },
+                {
+                    type: "ACCOUNT_TYPE",
+                    id: "account-type-container",
+                    style: "font-family: 'Open Sans', sans-serif;"
+                },
+                {
+                    type: "CARD_NAME",
+                    id: "card-name-container"
+                },
+                {
+                    type: "CARD_NUMBER",
+                    id: "card-container",
+                    placeholder: "Card Number"
+                },
+                {
+                    type: "EXPIRATION_DATE",
+                    id: "expiration-container"
+                },
+                {
+                    type: "ZIP_CODE",
+                    id: "zip-container"
+                },
+                {
+                    type: "PAYPAL_BUTTONS",
+                    merchantId: "D8FWL736DCHGS",
+                    amount: getPaymentAmount,
+                    payPalType:
+                    [
+                        {
+                            type: "PAYPAL",
+                            id: "paypal-container",
+                            buttonColor: "white"
+                        },
+                        {
+                            type: "PAYPAL_LATER",
+                            id: "paypal-later-container",
+                            buttonColor: "white"
+                        },
+                        {
+                            type: "PAYPAL_LATER_MSG",
+                            id: "paypal-later-msg-container",
+                        }, 
+                        {
+                            type: "VENMO",
+                            id: "venmo-container"
+                        }
+                    ]
+                }
+            ],
+            callback: callbackFunc,
+            payPalApproveCallback: payPalApproveCallback,
+            payPalErrorCallback: payPalErrorCallback
+        }
+
+        aptxFields.setup(config)
+    </script>
+</body>
+</html>
+
