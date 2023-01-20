@@ -148,6 +148,12 @@
         .is--block {
             display: block;
         }
+        .reload-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
     </style>
     <title>Hosted Fields Test</title>
 </head>
@@ -157,6 +163,17 @@
         Hosted Fields Test
     </h1>
     <div class="form-wrapper">
+        <div class="reload-container">
+            <div class="form-field">
+                Session Id
+                <input class="is--block" id="aptxQaSessionId" type="text">
+            </div>
+            <button style="margin-right: 0; padding-top: 5px; padding-bottom: 5px; height: 40px;"
+                onclick="reload()">
+                Reload
+            </button>
+        </div>
+        
         <ul class="nav nav-pills" id="pills-tab" role="tablist">
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="pills-bank-tab" data-bs-toggle="pill" data-bs-target="#pills-bank" type="button" role="tab" aria-controls="pills-bank" aria-selected="true">Add Bank</button>
@@ -219,11 +236,6 @@
                 <div class="button-container">
                     <button onclick="submitForm();">
                         Submit
-                    </button>
-                </div>
-                <div class="button-container">
-                    <button onclick="reload();">
-                        Reload
                     </button>
                 </div>
             </div>
