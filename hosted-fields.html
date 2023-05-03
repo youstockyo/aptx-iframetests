@@ -6,9 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-    <script src="https://test.aptx.cm/release_20230515/script/aptx-hosted-fields.js"></script>
-<!--     <script src="https://sandbox.aptx.cm/script/aptx-hosted-fields.js"></script> -->
-    <!-- <script src="script/aptx-hosted-fields.js"></script> -->
+    <script src="https://applepay.cdn-apple.com/jsapi/v1/apple-pay-sdk.js"></script>
+<!--     <script src="https://test.aptx.cm/release_20230410/script/aptx-hosted-fields.js"></script> -->
+    <script src="https://sandbox.aptx.cm/script/aptx-hosted-fields.js"></script>
+<!-- 	<script src="script/aptx-hosted-fields.js?ls=912" ></script> -->
     <style>
         body,
         body * {
@@ -57,7 +58,19 @@
             background-color: #ffffff;
         }
 
-        .field-container > iframe {
+        .fee-div {
+            margin-bottom: 20px;
+        }
+
+        .fee-display {
+            display: flex;
+            align-items: center;
+            max-width: 325px;
+            height: 2em;
+        }
+
+        .field-container > iframe,
+        .fee-display > iframe {
             border: none;
             margin: 0px;
             padding: 0px;
@@ -164,16 +177,39 @@
     </h1>
     <div class="form-wrapper">
         <div class="reload-container">
-            <div class="form-field">
-                Session Id
-                <input class="is--block" id="aptxQaSessionId" type="text">
+        	<div>
+	            <div class="form-field">
+	                Session Id
+	                <input class="is--block" id="aptxQaSessionId" type="text">
+	            </div>
+	             <div class="form-field">
+	                API Token
+	                <input class="is--block" id="aptxQaTokenId" type="text">
+				</div>	                
+	             <div class="form-field">
+	                Amount
+	                <input class="is--block" id="aptxQaAmount" type="text">
+	            </div>
             </div>
-            <button style="margin-right: 0; padding-top: 5px; padding-bottom: 5px; height: 40px;"
-                onclick="reload()">
-                Reload
-            </button>
+        	<div>
+	            <div class="form-field">
+	                Account Person Id
+	                <input class="is--block" id="aptxQaAccountPersonId" type="text">
+	            </div>
+	             <div class="form-field">
+	                Account Target Id
+	                <input class="is--block" id="aptxQaTargetId" type="text">
+	            </div>
+ 	             <div class="form-field">
+	                Merchant Id
+	                <input class="is--block" id="aptxQaMerchantId" type="text">
+	            </div>
+	            <button style="margin-right: 0; padding-top: 5px; padding-bottom: 5px; height: 40px;"
+	                onclick="reload()">
+	                Reload
+	            </button>
+            </div>
         </div>
-        
         <ul class="nav nav-pills" id="pills-tab" role="tablist">
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="pills-bank-tab" data-bs-toggle="pill" data-bs-target="#pills-bank" type="button" role="tab" aria-controls="pills-bank" aria-selected="true">Add Bank</button>
@@ -182,10 +218,16 @@
                 <button class="nav-link" id="pills-card-tab" data-bs-toggle="pill" data-bs-target="#pills-card" type="button" role="tab" aria-controls="pills-card" aria-selected="false">Add Card</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="pills-paypal-tab" data-bs-toggle="pill" data-bs-target="#pills-paypal" type="button" role="tab" aria-controls="pills-card" aria-selected="false">PayPal</button>
+                <button class="nav-link" id="pills-paypal-tab" data-bs-toggle="pill" data-bs-target="#pills-paypal" type="button" role="tab" aria-controls="pills-paypal" aria-selected="false">PayPal</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="pills-venmo-tab" data-bs-toggle="pill" data-bs-target="#pills-venmo" type="button" role="tab" aria-controls="pills-card" aria-selected="false">Venmo</button>
+                <button class="nav-link" id="pills-venmo-tab" data-bs-toggle="pill" data-bs-target="#pills-venmo" type="button" role="tab" aria-controls="pills-venmo" aria-selected="false">Venmo</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-bitpay-tab" data-bs-toggle="pill" data-bs-target="#pills-bitpay" type="button" role="tab" aria-controls="pills-bitpay" aria-selected="false">BitPay</button>
+            </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-applepay-tab" data-bs-toggle="pill" data-bs-target="#pills-applepay" type="button" role="tab" aria-controls="pills-card" aria-selected="false">ApplePay</button>
             </li>
         </ul>
         <div class="tab-content" id="pills-tabContent">
@@ -233,8 +275,8 @@
                     Zip Code
                     <div id="zip-container" class="field-container"></div>
                 </div>
-                <div>
-                    <div id="fee-container"></div>
+                <div class="fee-div">
+                    <div id="fee-container" class="fee-display"></div>
                 </div>
                 <div class="button-container">
                     <button onclick="submitForm();">
@@ -243,16 +285,6 @@
                 </div>
             </div>
             <div class="tab-pane fade" id="pills-paypal">
-                <div class="item-description">
-                    <div style="flex: 1 1 20em; margin-right: 40px;">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat fugit unde, necessitatibus ex temporibus culpa consequatur iusto. Quia doloremque quo possimus, inventore at porro quis libero hic, et quidem nostrum.
-                    </div>
-                    <label class="form-field">
-                        <span class="is--block">Amount</span>
-                        <input type="number"
-                            id="payment-amount">
-                    </label>
-                </div>
                 
                 <div class="paypal-submit-container">
                     <div id="paypal-container"
@@ -270,7 +302,38 @@
                 <div id="venmo-container"
                     class="venmo-button-container"></div>
             </div>
+            <div class="tab-pane fade" id="pills-applepay">
+                <div id="applepay-container"
+                    class="applepay-button-container"></div>
+            </div>
+            <div class="tab-pane fade" id="pills-bitpay">
+                <div id="bitpay-container"
+                    class="bitpay-button-container"></div>
+            </div>
         </div>
+        </br>
+         <div class="reload-container">
+       		<div>
+	            <div class="form-field">
+	                Method Id
+	                <input class="is--block" id="methodIdField" type="text" readonly/>
+	            </div>
+	             <div class="form-field">
+	                Payment Id
+	                <input class="is--block" id="paymentIdField" type="text" readonly/>
+	             </div>
+	        </div>
+	        <div>
+	            <div class="form-field">
+	                Order Id
+	                <input class="is--block" id="orderIdField" type="text" readonly/>
+	            </div>
+	            <div class="form-field">
+	                Error
+	                <input class="is--block" id="errorIdField" type="text" />
+	            </div>
+	        </div>
+        
     </div>
     
     <script>
@@ -294,39 +357,124 @@
         function callbackFunc(data)
         {
             console.log("this is the callbackFunc", data)
+            if(data.methodId !== undefined)
+            {
+            	document.getElementById("methodIdField").value = data.methodId;
+            }
+            else
+            {
+            	document.getElementById("errorIdField").value = JSON.stringify(data);
+            }
         };
 
-        function payPalApproveCallback(data)
+        function paymentCallbackFunc(data)
+        {
+            console.log("this is the paymentCallbackFunc", JSON.stringify(data))
+            document.getElementById("paymentIdField").value = data.paymentId;
+            if(data.orderID !== undefined)
+            {
+            	   document.getElementById("orderIdField").value = data.orderID;
+            }
+             document.getElementById("methodIdField").value = data.methodId;
+       };
+
+        function payPalApproveCallbackFunc(data)
         {
             console.log("this is the payPalApproveCallback", data)
+            document.getElementById("orderIdField").value = data.orderID;
             aptxFields.submitPayment(data)
         };
 
-        function payPalErrorCallback()
+        function payPalErrorCallbackFunc(data)
         {
-            console.log("this is the payPalErrorCallback")
+            console.log("this is the payPalErrorCallback", data)
         };
-
+        
+        function bitPayCallbackFunc(data)
+        {
+            console.log("this is the bitPayCallback", JSON.stringify(data))
+            document.getElementById("orderIdField").value = data.bitpayInvoiceId;
+            aptxFields.submitPayment(data)
+        	
+        };
+        
+        function bitPayErrorCallbackFunc(data)
+        {
+            console.log("this is the bitPayErrorCallback", JSON.stringify(data))
+            document.getElementById("errorIdField").value = JSON.stringify(data);
+        	
+        };
+        
         function getPaymentAmount()
         {
-            console.log('getPaymentAmount()');
-            return 19.99;
+            console.log('getPaymentAmount() returns ' + document.getElementById("aptxQaAmount").value);
+            return document.getElementById("aptxQaAmount").value;
+        };
+        
+        function getSessionId()
+        {
+            console.log('getSessionId() returns ' + document.getElementById("aptxQaSessionId").value);
+            return document.getElementById("aptxQaSessionId").value;
         };
 
+        function getTokenId()
+        {
+            console.log('getTokenId() returns ' + document.getElementById("aptxQaTokenId").value);
+            return document.getElementById("aptxQaTokenId").value;
+        };
+
+        function getTargetId()
+        {
+        	console.log('getTargetId() returns ' + document.getElementById("aptxQaTargetId").value);
+            return document.getElementById("aptxQaTargetId").value;
+        };
+        
+        function getAccountPersonId()
+        {
+        	console.log('getAccountPersonId() returns ' + document.getElementById("aptxQaAccountPersonId").value);
+            return document.getElementById("aptxQaAccountPersonId").value;
+        };
+
+        function getMerchantId()
+        {
+        	console.log('getMerchantId() returns ' + document.getElementById("aptxQaMerchantId").value);
+            return document.getElementById("aptxQaMerchantId").value;
+        };
+        
+        
         function reload()
         {
+        	config.sessionId = getSessionId();
+        	config.token = getTokenId();
+        	console.log(config);
+        	document.getElementById("methodIdField").value = "";
+        	document.getElementById("errorIdField").value = "";
+        	document.getElementById("paymentIdField").value = "";
+        	document.getElementById("orderIdField").value = "";
+            config.accountPersonId = getAccountPersonId();
+            config.accountTargetId = getTargetId();
+            config.token = getTokenId();
+            config.amount = getPaymentAmount();
+            config.sessionId = getSessionId();
+            config.merchantId = getMerchantId();
             aptxFields.setup(config);
+        };
+
+        function getFeeData(data)
+        {
+            console.log('this is the fee callback', data);
         };
 
         var config = 
         {
-            sessionId: '1LH8470O6WPSEN5R',
-            accountPersonId: 47975979,
-            accountTargetId: 12302450,
+            sessionId: getSessionId(),
+            accountPersonId: getAccountPersonId(),
+            accountTargetId: getTargetId(),
             production: false,
-            testEnv: true,
-            token: "2LG3OO45MVG0R7G7",
-            amount: getPaymentAmount,
+            testEnv: false,
+            token: getTokenId(),
+            amount: getPaymentAmount(),
+            merchantId: getMerchantId(),
             fields:
             [
                 {
@@ -358,7 +506,8 @@
                 {
                     type: "CARD_NUMBER",
                     id: "card-container",
-                    placeholder: "Card Number"
+                    placeholder: "Card Number",
+                    getFee: true
                 },
                 {
                     type: "EXPIRATION_DATE",
@@ -370,12 +519,15 @@
                 },
                 {
                     type: "FEE_DISPLAY",
-                    id: "fee-container"
+                    id: "fee-container",
+                    style: "font-family: 'Open Sans', sans-serif; text-align: center;",
+                    text: "There is a {feeAmount} fee with this method.",
+                    getFee: true
                 },
                 {
                     type: "PAYPAL_BUTTONS",
-                    merchantId: "D8FWL736DCHGS",
-                    amount: getPaymentAmount,
+                    merchantId: "Y3RLY7GZUCKJN",
+                    amount: getPaymentAmount(),
                     payPalType:
                     [
                         {
@@ -395,13 +547,25 @@
                         {
                             type: "VENMO",
                             id: "venmo-container"
+                        }, 
+                        {
+                            type: "APPLE_PAY",
+                            id: "applepay-container"
                         }
                     ]
+                },
+                {
+                    type: "BITPAY",
+                    id: "bitpay-container"
                 }
             ],
             callback: callbackFunc,
-            payPalApproveCallback: payPalApproveCallback,
-            payPalErrorCallback: payPalErrorCallback
+            feeDataCallback: getFeeData,
+            payPalApproveCallback: payPalApproveCallbackFunc,
+            payPalErrorCallback: payPalErrorCallbackFunc,
+            paymentCallback : paymentCallbackFunc,
+            bitPayCallback : bitPayCallbackFunc,
+            bitPayErrorCallback : bitPayErrorCallbackFunc
         }
 
         aptxFields.setup(config)
