@@ -275,9 +275,6 @@
                     Zip Code
                     <div id="zip-container" class="field-container"></div>
                 </div>
-                <div class="fee-div">
-                    <div id="fee-container" class="fee-display"></div>
-                </div>
                 <div class="button-container">
                     <button onclick="submitForm();">
                         Submit
@@ -516,14 +513,7 @@
                 {
                     type: "ZIP_CODE",
                     id: "zip-container"
-                },
-                {
-                    type: "FEE_DISPLAY",
-                    id: "fee-container",
-                    style: "font-family: 'Open Sans', sans-serif; text-align: center;",
-                    text: "There is a {feeAmount} fee with this method.",
-                    getFee: true
-                },
+                },               
                 {
                     type: "PAYPAL_BUTTONS",
                     merchantId: "Y3RLY7GZUCKJN",
