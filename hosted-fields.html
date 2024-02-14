@@ -7,9 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script src="https://applepay.cdn-apple.com/jsapi/v1/apple-pay-sdk.js"></script>
-<!--     <script src="https://test.aptx.cm/feature-APX-6407/script/aptx-hosted-fields.js?version=1"></script> -->
     <script src="https://aptx.cm/script/aptx-hosted-fields.js"></script>
-<!-- 	<script src="script/aptx-hosted-fields.js?ls=912" ></script> -->
     <style>
         body,
         body * {
@@ -49,7 +47,7 @@
             align-items: center;
             width: 100%;
             max-width: 100%;
-            height: 2em;
+            height: 2.5em;
             margin-top: 7px;
             padding: 5px 7px 3px 7px;
             border: 2px solid darkgrey;
@@ -177,6 +175,13 @@
   			--apple-pay-button-border-radius: 5px;
   			--apple-pay-button-padding: 5px 0px;
 		}
+        select {
+            background-color: #ffffff;
+            outline: 0;
+            border-radius: 3px;
+            border: 1px solid darkgrey;
+            /* appearance: none; */
+        }
     </style>
     <title>Hosted Fields Test</title>
 </head>
@@ -193,12 +198,12 @@
                 Session Id
                 <input class="is--block" id="aptxQaSessionId" type="text">
             </div>
-                <div class="form-field">
+            <div class="form-field">
                 API Token
                 <input class="is--block" id="aptxQaTokenId" type="text">
             </div>	                
-                <div class="form-field">
-                Amount
+            <div class="form-field">
+                Amount (in cents)
                 <input class="is--block" id="aptxQaAmount" type="text">
             </div>
         
@@ -206,15 +211,29 @@
                 Account Person Id
                 <input class="is--block" id="aptxQaAccountPersonId" type="text">
             </div>
-                <div class="form-field">
+            <div class="form-field">
                 Account Target Id
                 <input class="is--block" id="aptxQaTargetId" type="text">
             </div>
-                <div class="form-field">
+            <div class="form-field">
                 Merchant Id
                 <input class="is--block" id="aptxQaMerchantId" type="text">
             </div>
-            <button style="margin-right: 0; padding-top: 5px; padding-bottom: 5px; height: 40px;"
+            <div class="form-field">
+                testEnv
+                <div>
+                    <label>
+                        <input type="radio" id="testEnvTrue" name="testEnv" value=true checked />
+                        <span>True</span>
+                    </label>
+                    <label>
+                        <input type="radio" id="testEnvTrue" name="testEnv" value="false" />
+                        <span>False</span>
+                    </label>
+                </div>
+            </div>
+            <button id="submitConfigButton"
+                style="margin-right: 0; padding-top: 5px; padding-bottom: 5px; height: 40px;"
                 onclick="reload()">
                 Submit Config
             </button>
@@ -294,7 +313,7 @@
                 </div>
                 <div class="tab-pane fade" id="pills-paypal">
                     
-                    <div class="paypal-submit-container">
+                    <div id="paypalTab" class="paypal-submit-container">
                         <div id="paypal-container"
                             class="mw-button">
                         </div>
@@ -471,13 +490,26 @@
         	console.log('getMerchantId() returns ' + document.getElementById("aptxQaMerchantId").value);
             return document.getElementById("aptxQaMerchantId").value;
         };
-        
+
+        function getTestEnv()
+        {
+            var selectedTestEnvInput = document.querySelector('input[name="testEnv"]:checked');   
+
+        	console.log('getTestEnv() returns ' + selectedTestEnvInput.value);
+            if(selectedTestEnvInput.value == "true")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        };
         
         function reload()
         {
         	config.sessionId = getSessionId();
         	config.token = getTokenId();
-        	console.log(config);
         	document.getElementById("methodIdField").value = "";
         	document.getElementById("errorIdField").value = "";
         	document.getElementById("paymentIdField").value = "";
@@ -486,6 +518,8 @@
             config.accountTargetId = getTargetId();
             config.amount = getPaymentAmount();
             config.merchantId = getMerchantId();
+            config.testEnv = getTestEnv();
+            console.log(config);
             aptxFields.setup(config);
         };
 
@@ -500,25 +534,26 @@
             accountPersonId: getAccountPersonId(),
             accountTargetId: getTargetId(),
             production: false,
-            testEnv: false,
+            testEnv: getTestEnv(),
+            apxDev: true,
             token: getTokenId(),
             amount: getPaymentAmount(),
             merchantId: getMerchantId(),
             context: "release_20230710",
-            domain: "https://youstockyo.github.io",
+            domain: "https://test.aptx.cm",
             fields:
             [
                 {
                     type: "ACCOUNT_NAME",
                     id: "account-name-container",
                     placeholder: "Account Name",
-		    style:
-		    {
-		        border: '1px solid red !important',
-			height: "24px",
-			padding: "6px 12px",
-			color: "peach"
-		    }
+                    style:
+                    {
+                        fontSize: "18px",
+                        fontWeight: "bold",
+                        height: "24px",
+                        padding: "5px 10px"
+                    }
                 },
                 {
                     type: "ACCOUNT_NUMBER",
@@ -535,7 +570,13 @@
                 {
                     type: "ACCOUNT_TYPE",
                     id: "account-type-container",
-                    style: "font-family: 'Helvetica'"
+                    style:
+                    {
+                        fontFamily: "'Open Sans', sans-serif",
+                        fontSize: "12px",
+                        fontWeight: "bold",
+                        color: "Tomato"
+                    }
                 },
                 {
                     type: "CARD_NAME",
