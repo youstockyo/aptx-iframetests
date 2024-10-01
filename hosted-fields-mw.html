@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://api.aptx.cm/script/aptx-hosted-fields.js"></script>
+<!--     <script src="https://test.aptx.cm/feature-APX-6690/script/aptx-hosted-fields.js"></script> -->
+    <style>
+        body,
+        body * {
+            box-sizing: border-box;
+        }
+
+        body * {
+            font-family: "Open Sans", Arial, Helvetica, sans-serif;
+            font-size: 1em;
+        }
+
+        body {
+            padding: 20px;
+            background-color: #c5d8d1;
+        }
+
+        h1 {
+            width: 500px;
+            font-size: 2em;
+            margin: 3em auto 0 auto;
+        }
+
+        h2 {
+            width: 420px;
+            font-size: 1.25em;
+            margin: 1em auto 0 auto;
+        }
+
+        .form-wrapper,
+        .response-wrapper {
+            width: 500px;
+            margin: 1em auto;
+            background-color: #eef1ef;
+            border-radius: 3px;
+            padding: 2.5em;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-field {
+            margin-bottom: 20px;
+        }
+
+        .faux-input {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            max-width: 100%;
+            height: 2em;
+            margin-top: 7px;
+            padding: 5px 7px 3px 7px;
+            border: 2px solid darkgrey;
+            border-radius: 5px;
+            background-color: #ffffff;
+        }
+
+        .faux-input > iframe {
+            border: none;
+            margin: 0px;
+            padding: 0px;
+            width: 1px;
+            min-width: 100%;
+            height: 100%;
+            overflow: hidden;
+            display: block;
+        }
+
+        button {
+            padding: 15px 50px;
+            background-color: #4d685a;
+            color: #ffffff;
+            cursor: pointer;
+            font-weight: 700;
+            text-transform: uppercase;
+            line-height: inherit;
+            position: relative;
+            text-decoration: none;
+            text-align: center;
+            border-style: solid;
+            border-width: 1px;
+            border-radius: 3px;
+            display: inline-block;
+            margin: 0 auto;
+        }
+
+        .button-container {
+            text-align: center;
+        }
+
+        .response-container {
+            margin-top: 1em;
+            padding: 0.5em;
+            font-family: 'Courier New', Courier, monospace;
+            border-radius: 4px;
+            background-color: #ffffff;
+            min-height: 100px;
+        }
+    </style>
+    <title>Hosted Fields Test</title>
+</head>
+
+<body>
+    <h1>
+        Hosted Fields Test
+    </h1>
+    <div class="form-wrapper">
+      <div class="paypal-submit-container">
+          <div id="paypal-container"
+            class="mw-button">
+          </div>
+          <div id="paypal-later-container"
+            class="mw-button">
+          </div>
+          <div id="paypal-later-msg-container"></div>
+        <div id="venmo-container"
+          class="venmo-button-container">
+        </div>
+      </div>
+    </div>
+    <div class="response-wrapper">
+        <h2>Response Container</h2>
+        <div class="response-container js-response-text"></div>
+    </div>
+    
+    <script>
+        function callbackFunc(data)
+        {
+            console.log("this is the callbackFunc", data)
+            var responseContainer = document.querySelector(".js-response-text");
+
+            responseContainer.textContent = data;
+        };
+
+        var config =
+        {
+
+  "sessionId": "1M1IZ7PJMJB6N520",
+
+  "merchantId": 1666,
+
+  "amount": "10000",
+
+  "accountPersonId": "1438376",
+
+  "accountTargetId": 1403,
+
+  "token": "SL934RHI24RA2V66",
+
+  "domain": "https://youstockyo.github.io",
+
+  "production": false,
+
+  "fields": [
+
+    {
+
+      "type": "PAYPAL_BUTTONS",
+
+      "payPalType": [
+
+        {
+
+          "type": "PAYPAL",
+
+          "id": "paypal-container",
+
+          "buttonColor": "white"
+
+        },
+
+        {
+
+          "type": "PAYPAL_LATER",
+
+          "id": "paypal-later-container",
+
+          "buttonColor": "white"
+
+        },
+
+        {
+
+          "type": "PAYPAL_LATER_MSG",
+
+          "id": "paypal-later-msg-container"
+
+        },
+
+        {
+
+          "type": "VENMO",
+
+          "id": "venmo-container",
+
+          "buttonColor": "white"
+
+        }
+
+      ]
+
+    }
+
+  ]
+
+}
+        aptxFields.setup(config);
+    </script>
+</body>
+</html>
